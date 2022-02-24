@@ -1,0 +1,111 @@
+<div class="container" #container (scroll)="onScroll()" (mouseup)="mouseUp()">
+  <table cdkDropListGroup>
+    <tr>
+      <th class="sticky">Hello</th>
+      <th class="upper-header content" *ngFor="let month of months" colspan="7">
+        {{ month.split("_")[0] }}
+      </th>
+    </tr>
+    <tr>
+      <th class="sticky">Fixed</th>
+      <th class="lower-header content" *ngFor="let day of days">
+        {{ day.split("-")[2] }}
+      </th>
+    </tr>
+    <ng-container
+      *ngFor="let customer of POSITION_DATA; let customerIndex = index"
+    >
+      <tr>
+        <td
+          matRipple
+          class="sticky bold"
+          (click)="onCustomerToggle(customerIndex)"
+        >
+          <mat-icon>{{
+            customer.isExpanded ? "expand_more" : "chevron_right"
+          }}</mat-icon>
+          {{ customer.name }}
+        </td>
+      </tr>
+      <ng-container
+        *ngFor="let team of customer.children; let teamIndex = index"
+      >
+        <tr
+          *ngIf="customer.isExpanded"
+          (click)="onTeamToggle(customerIndex, teamIndex)"
+        >
+          <td matRipple class="sticky bold">
+            &nbsp;&nbsp;&nbsp;
+            <mat-icon>{{
+              team.isExpanded ? "expand_more" : "chevron_right"
+            }}</mat-icon>
+            {{ team.name }}
+          </td>
+        </tr>
+        <ng-container *ngFor="let position of team.children">
+          <tr *ngIf="customer.isExpanded && team.isExpanded">
+            <td class="sticky">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              {{ position.name }}
+            </td>
+            <td
+              class="content"
+              id="{{
+                customer.positionCode +
+                  '-' +
+                  team.positionCode +
+                  '-' +
+                  position.positionCode +
+                  '_' +
+                  day
+              }}"
+              *ngFor="let day of days"
+              cdkDropList
+              [cdkDropListData]="
+                dataSource[customer.positionCode][team.positionCode][
+                  position.positionCode
+                ][day]
+              "
+            >
+              <div
+                class="example-box"
+                [ngStyle]="{
+                  'background-color': item.color,
+                  width: item.length + 'px',
+                  'pointer-events': dragActive ? 'none' : 'all'
+                }"
+                *ngFor="
+                  let item of dataSource[customer.positionCode][
+                    team.positionCode
+                  ][position.positionCode][day]
+                "
+                (cdkDragDropped)="onDrop($event)"
+                (cdkDragStarted)="onDragStart($event)"
+                (cdkDragEntered)="onDragEntered($event)"
+                cdkDrag
+              >
+                <div
+                  *ngIf="(item | json) != '{}'"
+                  cdkDragHandle
+                  class="example-handle"
+                ></div>
+                <div
+                  class="example-custom-placeholder"
+                  *cdkDragPlaceholder
+                  [ngStyle]="{ width: item.length + 'px' }"
+                ></div>
+                {{ item.name }}
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </table>
+</div>
+<button mat-icon-button color="primary" aria-label="Navigate to previous month in timeline" (click)="initTimeline(false,4)">
+  <mat-icon>navigate_before</mat-icon>
+</button>
+<button mat-icon-button color="primary" aria-label="Navigate to next month in timeline" (click)="initTimeline(true,4)">
+  <mat-icon>navigate_next</mat-icon>
+</button>

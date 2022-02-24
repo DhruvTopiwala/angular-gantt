@@ -1,0 +1,62 @@
+<ng-template #positionTreeTpml let-list="list">
+  <ng-container *ngFor="let item of list">
+    <tr>
+      <td class="sticky">
+        <ng-container *ngFor="let _ of [].constructor(item.level)">
+          &nbsp;&nbsp;
+        </ng-container>
+        {{ item.name }}
+      </td>
+      <td *ngIf="item.isChild">Hello
+      </td>
+    </tr>
+    <ng-container *ngIf="!item.isChild">
+      <ng-container
+        *ngTemplateOutlet="positionTreeTpml; context: { list: item.children }"
+      ></ng-container>
+    </ng-container>
+  </ng-container>
+</ng-template>
+<ng-container
+  *ngTemplateOutlet="positionTreeTpml; context: { list: POSITION_DATA }"
+></ng-container>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <ng-container *ngFor="let row of dataSource; index as rowIndex">
+  <tr>
+    <td class="sticky">Fixed</td>
+    <td  class="content" id="{{rowIndex +'_'+ day}}" *ngFor="let day of days" cdkDropList [cdkDropListData]="row[day]">
+      <div
+        class="example-box"
+        [ngStyle]="{
+          'background-color': item.color,
+          width: item.length + 'px',
+          'pointer-events': dragActive ? 'none' : 'all'
+        }"
+        *ngFor="let item of row[day]"
+        (cdkDragDropped)="onDrop($event)"
+        (cdkDragStarted)="onDragStart($event)"
+        (cdkDragEntered)="onDragEntered($event)"
+        cdkDrag
+      >
+        <div *ngIf="(item | json) != '{}'" cdkDragHandle class="example-handle"></div>
+        <div
+          class="example-custom-placeholder"
+          *cdkDragPlaceholder
+          [ngStyle]="{ width: item.length + 'px' }"
+        ></div>
+        {{ item.name }}
+      </div>
+    </td>
+  </tr>
+</ng-container> -->

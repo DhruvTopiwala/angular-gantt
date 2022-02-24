@@ -1,0 +1,12 @@
+th.sticky,
+td.sticky{
+  position: sticky;
+  left: 0;
+  background-color: white;
+  width: max-content;
+  border-right: 1px solid #ddd;
+  box-shadow: 0px 3px 4px black;
+  z-index: 2;
+  white-space: nowrap;
+  padding-right: 1rem;
+}
